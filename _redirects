@@ -1,0 +1,3 @@
+/login          /app.html  200
+/cookbook       /app.html  200
+/cookbook/*     /app.html  200

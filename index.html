@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kitchen Memories – Dein täglicher Rezeptbegleiter. Sammle, organisiere und koche ohne Aufwand.">
+<meta name="keywords" content="Rezepte, Kochbuch, App, Rezeptverwaltung, Einkaufsliste, Meal Planning, Kitchen Memories">
+<meta property="og:title" content="Kitchen Memories – Your daily recipe companion">
+<meta property="og:description" content="Sammle, organisiere und koche ohne Aufwand. Jetzt kostenlos für iOS.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kitchenmemories.app">
+<meta property="og:image" content="https://kitchenmemories.app/assets/icon.png">
+<title>Kitchen Memories – Your daily recipe companion</title>
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-cream: #FFF8F0;
+  --color-warm-white: #FFFDFB;
+  --color-terracotta: #C1553B;
+  --color-terracotta-dark: #A3412A;
+  --color-terracotta-light: #E8926F;
+  --color-sage: #7A8B6F;
+  --color-sage-light: #E8EDE5;
+  --color-charcoal: #2C2C2C;
+  --color-text: #3D3D3D;
+  --color-text-light: #6B6B6B;
+  --color-border: #E8E0D8;
+  --color-card-bg: #FFFFFF;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-elevated: 0 12px 48px rgba(0,0,0,0.1);
+  --max-width: 1120px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── NAV ─── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 248, 240, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  transition: box-shadow 0.3s;
+}
+.nav.scrolled { box-shadow: var(--shadow-soft); }
+.nav-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--color-charcoal);
+}
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.nav-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--color-terracotta); }
+.nav-cta {
+  background: var(--color-charcoal) !important;
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600 !important;
+  transition: background 0.2s !important;
+}
+.nav-cta:hover { background: var(--color-terracotta) !important; }
+
+.nav-lang {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: border-color 0.2s;
+}
+.nav-lang:hover { border-color: var(--color-terracotta); }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 140px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(193,85,59,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -150px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(122,139,111,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  color: var(--color-charcoal);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  animation: fadeInDown 0.6s ease-out 0.1s both;
+}
+.hero h1 em {
+  color: var(--color-terracotta);
+  font-style: italic;
+}
+.hero-sub {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--color-text-light);
+  max-width: 540px;
+  margin: 0 auto 36px;
+  animation: fadeInDown 0.6s ease-out 0.2s both;
+}
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+  animation: fadeInDown 0.6s ease-out 0.3s both;
+}
+.btn-store {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-charcoal);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-store:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+.btn-store svg { width: 22px; height: 22px; }
+.btn-store-sub {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.7;
+  display: block;
+  line-height: 1;
+}
+.btn-store-main { display: block; line-height: 1.2; }
+
+/* Phone mockup */
+.hero-phone {
+  max-width: 300px;
+  margin: 0 auto;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+.phone-frame {
+  background: var(--color-charcoal);
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(0,0,0,0.05);
+}
+.phone-screen {
+  border-radius: 30px;
+  aspect-ratio: 9/19.5;
+  overflow: hidden;
+  position: relative;
+  background: #FFFFFF;
+}
+.phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* ─── FEATURES ─── */
+.section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-terracotta);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--color-charcoal);
+  margin-bottom: 12px;
+}
+.section-desc {
+  color: var(--color-text-light);
+  max-width: 560px;
+  font-size: 1.05rem;
+  margin-bottom: 48px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.feature-card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  border: 1px solid var(--color-border);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+}
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+.feature-icon.orange { background: #FDEEE8; }
+.feature-icon.green { background: var(--color-sage-light); }
+.feature-icon.blue { background: #E8F0FD; }
+.feature-icon.yellow { background: #FFF5E0; }
+.feature-icon.pink { background: #FDEAF2; }
+.feature-icon.purple { background: #F0EAFD; }
+
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-charcoal);
+  margin-bottom: 8px;
+}
+.feature-card p {
+  color: var(--color-text-light);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* ─── SCREENSHOTS ─── */
+.screenshots {
+  background: var(--color-warm-white);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.screenshots-scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 0 0 20px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.screenshots-scroll::-webkit-scrollbar { display: none; }
+.screenshot-item {
+  flex: 0 0 220px;
+  scroll-snap-align: center;
+}
+.screenshot-img {
+  width: 220px;
+  height: 440px;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 1px solid var(--color-border);
+  display: block;
+  transition: transform 0.3s;
+  box-shadow: var(--shadow-soft);
+}
+.screenshot-img:hover { transform: scale(1.03); }
+.screenshot-label {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+}
+
+/* ─── PRICING ─── */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 860px;
+}
+.pricing-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  position: relative;
+}
+.pricing-card.featured {
+  border-color: var(--color-terracotta);
+  box-shadow: 0 0 0 1px var(--color-terracotta), var(--shadow-soft);
+}
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--color-terracotta);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.pricing-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-charcoal);
+  margin-bottom: 4px;
+}
+.pricing-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-charcoal);
+  margin: 12px 0;
+}
+.pricing-price span {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--color-text-light);
+}
+.pricing-features {
+  list-style: none;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pricing-features li {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pricing-features li::before {
+  content: '✓';
+  color: var(--color-sage);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  background: var(--color-charcoal);
+  color: rgba(255,255,255,0.6);
+  padding: 48px 24px;
+  text-align: center;
+}
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  color: white;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+.footer-logo img {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footer-links a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: white; }
+.footer-copy {
+  font-size: 0.8rem;
+  opacity: 0.4;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 120px 20px 60px; }
+  .hero-phone { max-width: 240px; }
+  .section { padding: 60px 20px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-cards { grid-template-columns: 1fr; max-width: 100%; }
+}
+
+/* ─── LANGUAGE TOGGLE ─── */
+[data-lang="en"] .lang-de { display: none; }
+[data-lang="de"] .lang-en { display: none; }
+
+/* Screenshots: img tags with lang class need block display when visible */
+.screenshot-img.lang-de,
+.screenshot-img.lang-en { display: block; }
+[data-lang="en"] .screenshot-img.lang-de { display: none; }
+[data-lang="de"] .screenshot-img.lang-en { display: none; }
+</style>
+</head>
+
+<body data-lang="de">
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <img src="assets/icon.png" alt="Kitchen Memories">
+      </div>
+      <span class="nav-logo-text">Kitchen Memories</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features"><span class="lang-de">Funktionen</span><span class="lang-en">Features</span></a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#pricing"><span class="lang-de">Preise</span><span class="lang-en">Pricing</span></a></li>
+      <li><button class="nav-lang" onclick="toggleLang()" id="langBtn">EN</button></li>
+      <li><a href="https://app.kitchenmemories.app" class="nav-cta">Login</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>
+    <span class="lang-de">Deine Rezepte,<br>immer <em>griffbereit.</em></span>
+    <span class="lang-en">Your recipes,<br>always <em>at hand.</em></span>
+  </h1>
+  <p class="hero-sub">
+    <span class="lang-de">Sammle, organisiere und koche ohne Aufwand. Kitchen Memories vereint all deine Rezepte an einem Ort.</span>
+    <span class="lang-en">Collect, organize and cook effortlessly. Kitchen Memories brings all your recipes together in one place.</span>
+  </p>
+  <div class="hero-buttons">
+    <a href="https://apps.apple.com/ch/app/kitchen-memories/id6751842602" class="btn-store" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      <div>
+        <span class="btn-store-sub">
+          <span class="lang-de">Laden im</span>
+          <span class="lang-en">Download on the</span>
+        </span>
+        <span class="btn-store-main">App Store</span>
+      </div>
+    </a>
+    <a href="#" class="btn-store" style="opacity: 0.5; pointer-events: none;">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 12l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+      <div>
+        <span class="btn-store-sub">
+          <span class="lang-de">Demnächst im</span>
+          <span class="lang-en">Coming soon on</span>
+        </span>
+        <span class="btn-store-main">Google Play</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="hero-phone">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <img src="assets/home_wo_bezel.png" alt="Kitchen Memories Home Screen">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="reveal">
+    <div class="section-label">
+      <span class="lang-de">✦ Funktionen</span>
+      <span class="lang-en">✦ Features</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-de">Alles, was dein Kochleben braucht.</span>
+      <span class="lang-en">Everything your cooking life needs.</span>
+    </h2>
+    <p class="section-desc">
+      <span class="lang-de">Von der Inspiration bis zum fertigen Gericht – Kitchen Memories begleitet dich bei jedem Schritt.</span>
+      <span class="lang-en">From inspiration to the finished dish – Kitchen Memories accompanies you every step of the way.</span>
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon orange">📸</div>
+      <h3>
+        <span class="lang-de">Rezepte importieren</span>
+        <span class="lang-en">Import recipes</span>
+      </h3>
+      <p>
+        <span class="lang-de">Aus Notizen, Fotos, Screenshots oder direkt von Instagram und Webseiten. Auch manuell eingeben – ganz wie du willst.</span>
+        <span class="lang-en">From notes, photos, screenshots or directly from Instagram and websites. Or enter them manually – whatever you prefer.</span>
+      </p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon green">📂</div>
+      <h3>
+        <span class="lang-de">Übersichtlich organisieren</span>
+        <span class="lang-en">Stay organized</span>
+      </h3>
+      <p>
+        <span class="lang-de">Kategorien, Favoriten und Suche halten deine Sammlung immer griffbereit. Finde jedes Rezept in Sekunden.</span>
+        <span class="lang-en">Categories, favorites and search keep your collection at your fingertips. Find any recipe in seconds.</span>
+      </p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon blue">👨‍🍳</div>
+      <h3>Cooking Modus</h3>
+      <p>
+        <span class="lang-de">Ruhiges, übersichtliches Layout für die Küche. Schritt für Schritt kochen – auch mit klebrigen Fingern.</span>
+        <span class="lang-en">Calm, clear layout made for the kitchen. Cook step by step – even with sticky fingers.</span>
+      </p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon yellow">🛒</div>
+      <h3>
+        <span class="lang-de">Smarte Einkaufslisten</span>
+        <span class="lang-en">Smart shopping lists</span>
+      </h3>
+      <p>
+        <span class="lang-de">Automatisch aus Rezepten generiert und sinnvoll gruppiert. Mit Bring!-Integration direkt auf dein Handy.</span>
+        <span class="lang-en">Automatically generated from recipes and grouped smartly. With Bring! integration directly to your phone.</span>
+      </p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon pink">📅</div>
+      <h3>
+        <span class="lang-de">Mahlzeiten planen</span>
+        <span class="lang-en">Meal planning</span>
+      </h3>
+      <p>
+        <span class="lang-de">Plane deine Woche mit dem Mahlzeitenplaner. Rezepte zuweisen, Einkaufslisten für mehrere Tage erstellen.</span>
+        <span class="lang-en">Plan your week with the meal planner. Assign recipes and create shopping lists for multiple days.</span>
+      </p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon purple">☁️</div>
+      <h3>Cloud Sync</h3>
+      <p>
+        <span class="lang-de">Deine Rezepte sicher in der Cloud, auf all deinen Geräten verfügbar. Portionsrechner inklusive.</span>
+        <span class="lang-en">Your recipes safe in the cloud, available on all your devices. Serving calculator included.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screenshots" id="screenshots">
+  <div class="section" style="padding-bottom: 40px;">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="lang-de">✦ Einblicke</span>
+        <span class="lang-en">✦ Preview</span>
+      </div>
+      <h2 class="section-title">
+        <span class="lang-de">So sieht Kitchen Memories aus.</span>
+        <span class="lang-en">See Kitchen Memories in action.</span>
+      </h2>
+    </div>
+    <div class="screenshots-scroll reveal">
+      <div class="screenshot-item">
+        <img class="screenshot-img lang-en" src="assets/s1.png" alt="Home">
+        <img class="screenshot-img lang-de" src="assets/s1de.png" alt="Home">
+        <div class="screenshot-label">Home</div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img" src="assets/s2.png" alt="Recipe">
+        <div class="screenshot-label"><span class="lang-de">Rezept</span><span class="lang-en">Recipe</span></div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img lang-en" src="assets/s3_2.jpg" alt="Save Recipes">
+        <img class="screenshot-img lang-de" src="assets/s3de_2.jpg" alt="Rezepte speichern">
+        <div class="screenshot-label"><span class="lang-de">Rezepte speichern</span><span class="lang-en">Save Recipes</span></div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img lang-en" src="assets/s4.png" alt="Shopping">
+        <img class="screenshot-img lang-de" src="assets/s4de.png" alt="Einkaufswagen">
+        <div class="screenshot-label"><span class="lang-de">Einkaufswagen</span><span class="lang-en">Shopping</span></div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img lang-en" src="assets/meal_planner_en.png" alt="Meal Planner">
+        <img class="screenshot-img lang-de" src="assets/meal_planner_de.png" alt="Mahlzeitenplaner">
+        <div class="screenshot-label"><span class="lang-de">Mahlzeitenplaner</span><span class="lang-en">Meal Planner</span></div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img" src="assets/s5.png" alt="Cookbook">
+        <div class="screenshot-label"><span class="lang-de">Kochbuch</span><span class="lang-en">Cookbook</span></div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img lang-en" src="assets/s6.png" alt="Dark Mode">
+        <img class="screenshot-img lang-de" src="assets/s6de.png" alt="Dark Mode">
+        <div class="screenshot-label">Dark Mode</div>
+      </div>
+      <div class="screenshot-item">
+        <img class="screenshot-img" src="assets/s7.png" alt="More">
+        <div class="screenshot-label">More</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="reveal">
+    <div class="section-label">
+      <span class="lang-de">✦ Preise</span>
+      <span class="lang-en">✦ Pricing</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-de">Starte kostenlos.</span>
+      <span class="lang-en">Start for free.</span>
+    </h2>
+    <p class="section-desc">
+      <span class="lang-de">Alle wichtigen Funktionen sind gratis. Premium schaltet Cloud-Sync und erweiterte Features frei.</span>
+      <span class="lang-en">All essential features are free. Premium unlocks cloud sync and advanced features.</span>
+    </p>
+  </div>
+
+  <div class="pricing-cards reveal">
+    <div class="pricing-card">
+      <h3>Free</h3>
+      <div class="pricing-price">€0 <span>/ <span class="lang-de">für immer</span><span class="lang-en">forever</span></span></div>
+      <ul class="pricing-features">
+        <li><span class="lang-de">Bis zu 6 Rezepte</span><span class="lang-en">Up to 6 recipes</span></li>
+        <li><span class="lang-de">Import aus Fotos &amp; Web</span><span class="lang-en">Import from photos &amp; web</span></li>
+        <li>Cooking Modus</li>
+        <li><span class="lang-de">Einkaufslisten</span><span class="lang-en">Shopping lists</span></li>
+        <li><span class="lang-de">Mahlzeitenplaner</span><span class="lang-en">Meal planner</span></li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <h3>Premium</h3>
+      <div class="pricing-price">€2.99 <span>/ <span class="lang-de">Monat</span><span class="lang-en">month</span></span></div>
+      <ul class="pricing-features">
+        <li><span class="lang-de">Alles aus Free</span><span class="lang-en">Everything in Free</span></li>
+        <li><span class="lang-de">Unbegrenzte Rezepte</span><span class="lang-en">Unlimited recipes</span></li>
+      </ul>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">
+        <span class="lang-de">Beliebt</span>
+        <span class="lang-en">Popular</span>
+      </div>
+      <h3>Premium</h3>
+      <div class="pricing-price">€19.99 <span>/ <span class="lang-de">Jahr</span><span class="lang-en">year</span></span></div>
+      <p style="font-size:0.82rem;color:var(--color-text-light);margin-top:-6px;margin-bottom:12px;"><span class="lang-de">≈ €1.67 / Monat</span><span class="lang-en">≈ €1.67 / month</span></p>
+      <ul class="pricing-features">
+        <li><span class="lang-de">Alles aus Free</span><span class="lang-en">Everything in Free</span></li>
+        <li><span class="lang-de">Unbegrenzte Rezepte</span><span class="lang-en">Unlimited recipes</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="assets/icon.png" alt="Kitchen Memories">
+      Kitchen Memories
+    </div>
+    <div class="footer-links">
+      <a href="https://apps.apple.com/ch/app/kitchen-memories/id6751842602" target="_blank" rel="noopener">App Store</a>
+      <a href="https://sites.google.com/view/my-cook-book-privacy-policy" target="_blank" rel="noopener">
+        <span class="lang-de">Datenschutz</span>
+        <span class="lang-en">Privacy</span>
+      </a>
+      <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">
+        <span class="lang-de">Nutzungsbedingungen</span>
+        <span class="lang-en">Terms of Use</span>
+      </a>
+      <a href="mailto:info.fursoft@gmail.com">
+        <span class="lang-de">Kontakt</span>
+        <span class="lang-en">Contact</span>
+      </a>
+    </div>
+    <p class="footer-copy">© 2026 Fuerer Apps. <span class="lang-de">Alle Rechte vorbehalten.</span><span class="lang-en">All rights reserved.</span></p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Language toggle
+function toggleLang() {
+  const body = document.body;
+  const btn = document.getElementById('langBtn');
+  if (body.dataset.lang === 'de') {
+    body.dataset.lang = 'en';
+    btn.textContent = 'DE';
+  } else {
+    body.dataset.lang = 'de';
+    btn.textContent = 'EN';
+  }
+}
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Redirect to /cookbook if already logged in
+import('https://esm.sh/@supabase/supabase-js@2').then(({ createClient }) => {
+  const sb = createClient(
+    'https://anfcijhabsneciwxqfgs.supabase.co',
+    'sb_publishable_WUiTy6R_-OuH030PlED84g_1_ZF4_K6'
+  );
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.replace('/cookbook');
+  });
+});
+</script>
+
+</body>
+</html>
