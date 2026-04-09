@@ -2,10 +2,94 @@ import { signIn, supabase } from '../js/supabase.js';
 import { t, langToggleBtn, bindLangToggle } from '../js/i18n.js';
 
 export function renderLogin(container, navigate) {
+  // Check if this is a password recovery redirect
+  const hash = new URLSearchParams(window.location.hash.replace('#', '?').slice(1));
+  const type = hash.get('type');
+  const accessToken = hash.get('access_token');
+  const error = hash.get('error');
+
+  if (error) {
+    showSignIn(container, navigate, 'The reset link has expired. Please request a new one.');
+    return;
+  }
+
+  if (type === 'recovery' && accessToken) {
+    // Set the session from the recovery token
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: hash.get('refresh_token') || '',
+    }).then(() => {
+      window.history.replaceState({}, '', '/login');
+      showNewPassword(container, navigate);
+    });
+    return;
+  }
+
   showSignIn(container, navigate);
 }
 
-function showSignIn(container, navigate) {
+function showNewPassword(container, navigate) {
+  container.innerHTML = `
+    <div class="login-wrap">
+      <div class="login-card">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
+        <div class="login-logo">
+          <img src="/assets/icon.png" alt="Kitchen Memories">
+          <span class="login-logo-text">Kitchen Memories</span>
+        </div>
+        <h2>${t('resetPassword')}</h2>
+        <p>Enter your new password</p>
+        <form id="newpw-form">
+          <div class="form-group">
+            <label for="password">${t('password')}</label>
+            <input type="password" id="password" placeholder="••••••••" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="password2">Confirm password</label>
+            <input type="password" id="password2" placeholder="••••••••" required minlength="6">
+          </div>
+          <button type="submit" class="btn-primary" id="newpw-btn">Save new password</button>
+          <p id="newpw-msg" style="display:none;text-align:center;margin-top:12px;font-size:0.85rem;"></p>
+        </form>
+      </div>
+    </div>
+  `;
+
+  bindLangToggle(() => showNewPassword(container, navigate));
+
+  const form = document.getElementById('newpw-form');
+  const btn = document.getElementById('newpw-btn');
+  const msgEl = document.getElementById('newpw-msg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw1 = document.getElementById('password').value;
+    const pw2 = document.getElementById('password2').value;
+
+    if (pw1 !== pw2) {
+      msgEl.textContent = 'Passwords do not match.';
+      msgEl.style.color = 'var(--color-terracotta)';
+      msgEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const { error } = await supabase.auth.updateUser({ password: pw1 });
+    if (error) {
+      msgEl.textContent = error.message;
+      msgEl.style.color = 'var(--color-terracotta)';
+      msgEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Save new password';
+    } else {
+      navigate('/cookbook');
+    }
+  });
+}
+
+function showSignIn(container, navigate, errorMessage = null) {
   container.innerHTML = `
     <div class="login-wrap">
       <div class="login-card">
@@ -26,7 +110,7 @@ function showSignIn(container, navigate) {
             <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
           </div>
           <button type="submit" class="btn-primary" id="login-btn">${t('signIn')}</button>
-          <p class="error-msg" id="login-error" style="display:none;"></p>
+          <p class="error-msg" id="login-error" style="${errorMessage ? '' : 'display:none;'}">${errorMessage || ''}</p>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:0.85rem;">
           <a href="#" id="forgot-link" style="color:var(--color-terracotta);text-decoration:none;">${t('forgotPassword')}</a>
