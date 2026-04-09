@@ -1,4 +1,5 @@
 import { signIn, supabase } from '../js/supabase.js';
+import { t, langToggleBtn, bindLangToggle } from '../js/i18n.js';
 
 export function renderLogin(container, navigate) {
   showSignIn(container, navigate);
@@ -8,30 +9,33 @@ function showSignIn(container, navigate) {
   container.innerHTML = `
     <div class="login-wrap">
       <div class="login-card">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
         <div class="login-logo">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="login-logo-text">Kitchen Memories</span>
         </div>
-        <h2>Welcome back</h2>
-        <p>Sign in to access your recipes</p>
+        <h2>${t('welcomeBack')}</h2>
+        <p>${t('signInDesc')}</p>
         <form id="login-form">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">${t('email')}</label>
             <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">${t('password')}</label>
             <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
           </div>
-          <button type="submit" class="btn-primary" id="login-btn">Sign in</button>
+          <button type="submit" class="btn-primary" id="login-btn">${t('signIn')}</button>
           <p class="error-msg" id="login-error" style="display:none;"></p>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:0.85rem;">
-          <a href="#" id="forgot-link" style="color:var(--color-terracotta);text-decoration:none;">Forgot password?</a>
+          <a href="#" id="forgot-link" style="color:var(--color-terracotta);text-decoration:none;">${t('forgotPassword')}</a>
         </p>
       </div>
     </div>
   `;
+
+  bindLangToggle(() => showSignIn(container, navigate));
 
   const form = document.getElementById('login-form');
   const btn = document.getElementById('login-btn');
@@ -40,7 +44,7 @@ function showSignIn(container, navigate) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     btn.disabled = true;
-    btn.textContent = 'Signing in…';
+    btn.textContent = t('signingIn');
     errorEl.style.display = 'none';
 
     const email = document.getElementById('email').value.trim();
@@ -51,7 +55,7 @@ function showSignIn(container, navigate) {
       errorEl.textContent = error.message;
       errorEl.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = 'Sign in';
+      btn.textContent = t('signIn');
     } else {
       navigate('/cookbook');
     }
@@ -67,26 +71,29 @@ function showForgotPassword(container, navigate) {
   container.innerHTML = `
     <div class="login-wrap">
       <div class="login-card">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
         <div class="login-logo">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="login-logo-text">Kitchen Memories</span>
         </div>
-        <h2>Reset password</h2>
-        <p>Enter your email and we'll send you a reset link</p>
+        <h2>${t('resetPassword')}</h2>
+        <p>${t('resetDesc')}</p>
         <form id="reset-form">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">${t('email')}</label>
             <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
           </div>
-          <button type="submit" class="btn-primary" id="reset-btn">Send reset link</button>
+          <button type="submit" class="btn-primary" id="reset-btn">${t('sendResetLink')}</button>
           <p id="reset-msg" style="display:none;text-align:center;margin-top:12px;font-size:0.85rem;"></p>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:0.85rem;">
-          <a href="#" id="back-link" style="color:var(--color-terracotta);text-decoration:none;">← Back to sign in</a>
+          <a href="#" id="back-link" style="color:var(--color-terracotta);text-decoration:none;">${t('backToSignIn')}</a>
         </p>
       </div>
     </div>
   `;
+
+  bindLangToggle(() => showForgotPassword(container, navigate));
 
   const form = document.getElementById('reset-form');
   const btn = document.getElementById('reset-btn');
@@ -95,7 +102,7 @@ function showForgotPassword(container, navigate) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.textContent = t('sending');
     msgEl.style.display = 'none';
 
     const email = document.getElementById('email').value.trim();
@@ -107,12 +114,12 @@ function showForgotPassword(container, navigate) {
       msgEl.textContent = error.message;
       msgEl.style.color = 'var(--color-terracotta)';
     } else {
-      msgEl.textContent = '✓ Check your email for the reset link!';
+      msgEl.textContent = t('resetSuccess');
       msgEl.style.color = 'var(--color-sage)';
     }
     msgEl.style.display = 'block';
     btn.disabled = false;
-    btn.textContent = 'Send reset link';
+    btn.textContent = t('sendResetLink');
   });
 
   document.getElementById('back-link').addEventListener('click', (e) => {

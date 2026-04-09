@@ -1,4 +1,5 @@
 import { fetchRecipe } from '../js/supabase.js';
+import { t } from '../js/i18n.js';
 
 export async function renderCooking(container, navigate, id) {
   container.innerHTML = `<div class="cooking-page"><div class="spinner" style="border-color:rgba(255,255,255,0.2);border-top-color:#E8926F;"></div></div>`;
@@ -19,7 +20,6 @@ export async function renderCooking(container, navigate, id) {
     return;
   }
 
-  // Request screen wake lock
   let wakeLock = null;
   try {
     if ('wakeLock' in navigator) {
@@ -37,7 +37,7 @@ export async function renderCooking(container, navigate, id) {
     container.innerHTML = `
       <div class="cooking-page">
         <div class="cooking-nav">
-          <button class="cooking-btn-exit" id="exit-btn">✕ Exit</button>
+          <button class="cooking-btn-exit" id="exit-btn">${t('exit')}</button>
           <div class="cooking-nav-title">${escHtml(recipe.name)}</div>
           <div style="width:80px;"></div>
         </div>
@@ -47,18 +47,14 @@ export async function renderCooking(container, navigate, id) {
         </div>
 
         <div class="cooking-main">
-          <div class="cooking-step-count">Step ${current + 1} of ${steps.length}</div>
-
-          ${stepImg ? `<img class="cooking-step-img" src="${stepImg}" alt="Step ${current + 1}">` : ''}
-
+          <div class="cooking-step-count">${t('stepOf', current + 1, steps.length)}</div>
+          ${stepImg ? `<img class="cooking-step-img" src="${stepImg}" alt="${t('stepOf', current + 1, steps.length)}">` : ''}
           <div class="cooking-step-text">${escHtml(String(steps[current]))}</div>
         </div>
 
         <div class="cooking-controls">
           <button class="cooking-nav-btn" id="prev-btn" ${current === 0 ? 'disabled' : ''}>←</button>
-          <button class="cooking-nav-btn primary" id="next-btn">
-            ${isLast ? '✓' : '→'}
-          </button>
+          <button class="cooking-nav-btn primary" id="next-btn">${isLast ? '✓' : '→'}</button>
         </div>
       </div>
     `;
@@ -73,15 +69,9 @@ export async function renderCooking(container, navigate, id) {
     });
 
     document.getElementById('next-btn').addEventListener('click', () => {
-      if (isLast) {
-        showDone();
-      } else {
-        current++;
-        render();
-      }
+      if (isLast) { showDone(); } else { current++; render(); }
     });
 
-    // Swipe support
     let touchStartX = 0;
     const main = container.querySelector('.cooking-main');
     main.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
@@ -100,10 +90,10 @@ export async function renderCooking(container, navigate, id) {
       <div class="cooking-page" style="align-items:center;justify-content:center;">
         <div class="cooking-done">
           <div style="font-size:64px;margin-bottom:16px;">🍽️</div>
-          <h2>Enjoy your meal!</h2>
+          <h2>${t('enjoyMeal')}</h2>
           <p>${escHtml(recipe.name)}</p>
           <button class="cooking-btn-exit" id="back-btn" style="margin-top:8px;padding:12px 28px;font-size:0.95rem;">
-            ← Back to recipe
+            ${t('backToRecipe')}
           </button>
         </div>
       </div>

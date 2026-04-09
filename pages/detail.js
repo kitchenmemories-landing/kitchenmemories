@@ -1,16 +1,26 @@
 import { fetchRecipe, signOut, formatTime, getSession } from '../js/supabase.js';
+import { t, langToggleBtn, bindLangToggle } from '../js/i18n.js';
 
 export async function renderDetail(container, navigate, id) {
   const session = await getSession();
-  container.innerHTML = nav(session) + `<div class="page"><div class="spinner"></div></div>`;
-  bindNav(navigate);
+
+  function buildNav() {
+    return nav(session);
+  }
+
+  container.innerHTML = buildNav() + `<div class="page"><div class="spinner"></div></div>`;
+  bindNav(navigate, () => {
+    container.querySelector('nav').outerHTML = buildNav();
+    bindNav(navigate, () => {});
+    render();
+  });
 
   let recipe;
   try {
     recipe = await fetchRecipe(id);
   } catch (err) {
     document.querySelector('.page').innerHTML =
-      `<a class="back-link" href="/cookbook" data-link>← Back</a>
+      `<a class="back-link" href="/cookbook" data-link>${t('backToRecipes')}</a>
        <div class="empty-state"><p>Recipe not found.</p></div>`;
     bindLinks(navigate);
     return;
@@ -25,10 +35,10 @@ export async function renderDetail(container, navigate, id) {
     const steps = (recipe.recipe_instructions || []);
     const totalTime = [recipe.prep_time, recipe.cook_time, recipe.rest_time]
       .filter(Boolean)
-      .reduce((sum, t) => sum + parseInt(t || 0), 0);
+      .reduce((sum, v) => sum + parseInt(v || 0), 0);
 
     document.querySelector('.page').innerHTML = `
-      <a class="back-link" href="/cookbook" data-link>← My Recipes</a>
+      <a class="back-link" href="/cookbook" data-link>${t('backToRecipes')}</a>
 
       ${recipe.image_url ? `<img class="detail-hero" src="${recipe.image_url}" alt="${escHtml(recipe.name)}">` : ''}
 
@@ -39,30 +49,26 @@ export async function renderDetail(container, navigate, id) {
       </div>
 
       <div class="detail-meta">
-        ${recipe.prep_time ? `<div class="detail-meta-item"><span class="detail-meta-label">Prep</span><span class="detail-meta-value">${formatTime(recipe.prep_time)}</span></div>` : ''}
-        ${recipe.cook_time ? `<div class="detail-meta-item"><span class="detail-meta-label">Cook</span><span class="detail-meta-value">${formatTime(recipe.cook_time)}</span></div>` : ''}
-        ${recipe.rest_time ? `<div class="detail-meta-item"><span class="detail-meta-label">Rest</span><span class="detail-meta-value">${formatTime(recipe.rest_time)}</span></div>` : ''}
-        ${totalTime > 0 ? `<div class="detail-meta-item"><span class="detail-meta-label">Total</span><span class="detail-meta-value">${formatTime(String(totalTime))}</span></div>` : ''}
-        <div class="detail-meta-item"><span class="detail-meta-label">Servings</span><span class="detail-meta-value">${baseServings}</span></div>
+        ${recipe.prep_time ? `<div class="detail-meta-item"><span class="detail-meta-label">${t('prep')}</span><span class="detail-meta-value">${formatTime(recipe.prep_time)}</span></div>` : ''}
+        ${recipe.cook_time ? `<div class="detail-meta-item"><span class="detail-meta-label">${t('cook')}</span><span class="detail-meta-value">${formatTime(recipe.cook_time)}</span></div>` : ''}
+        ${recipe.rest_time ? `<div class="detail-meta-item"><span class="detail-meta-label">${t('rest')}</span><span class="detail-meta-value">${formatTime(recipe.rest_time)}</span></div>` : ''}
+        ${totalTime > 0 ? `<div class="detail-meta-item"><span class="detail-meta-label">${t('total')}</span><span class="detail-meta-value">${formatTime(String(totalTime))}</span></div>` : ''}
+        <div class="detail-meta-item"><span class="detail-meta-label">${t('servings')}</span><span class="detail-meta-value">${baseServings}</span></div>
       </div>
 
       ${steps.length ? `
-        <a class="btn-cook" href="/cookbook/${id}/cook" data-link>
-          👨‍🍳 Start Cooking
-        </a>
+        <a class="btn-cook" href="/cookbook/${id}/cook" data-link>${t('startCooking')}</a>
       ` : ''}
 
       <div class="detail-layout">
         <div>
-          <h2 class="detail-section-title">Ingredients</h2>
-
+          <h2 class="detail-section-title">${t('ingredients')}</h2>
           <div class="servings-control">
             <button class="servings-btn" id="servings-minus">−</button>
             <span class="servings-count" id="servings-count">${currentServings}</span>
-            <span class="servings-label">servings</span>
+            <span class="servings-label">${t('servings')}</span>
             <button class="servings-btn" id="servings-plus">+</button>
           </div>
-
           <ul class="ingredient-list">
             ${ingredients.map(ing => {
               const amount = typeof ing.amount === 'number'
@@ -76,9 +82,8 @@ export async function renderDetail(container, navigate, id) {
             }).join('')}
           </ul>
         </div>
-
         <div>
-          <h2 class="detail-section-title">Instructions</h2>
+          <h2 class="detail-section-title">${t('instructions')}</h2>
           <ol class="steps-list">
             ${steps.map((step, i) => `
               <li class="step-item">
@@ -92,7 +97,6 @@ export async function renderDetail(container, navigate, id) {
     `;
 
     bindLinks(navigate);
-
     document.getElementById('servings-minus')?.addEventListener('click', () => {
       if (currentServings > 1) { currentServings--; render(); }
     });
@@ -110,24 +114,26 @@ function nav(session) {
   return `
     <nav class="nav">
       <div class="nav-inner">
-        <a href="https://kitchenmemories.app" class="nav-logo">
+        <a href="/" class="nav-logo">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="nav-logo-text">Kitchen Memories</span>
         </a>
         <div class="nav-actions">
           <span class="nav-user">${escHtml(email)}</span>
-          <button class="btn-ghost" id="sign-out-btn">Sign out</button>
+          ${langToggleBtn()}
+          <button class="btn-ghost" id="sign-out-btn">${t('signOut')}</button>
         </div>
       </div>
     </nav>
   `;
 }
 
-function bindNav(navigate) {
+function bindNav(navigate, onLangToggle) {
   document.getElementById('sign-out-btn')?.addEventListener('click', async () => {
     await signOut();
     navigate('/login');
   });
+  bindLangToggle(onLangToggle);
 }
 
 function bindLinks(navigate) {
