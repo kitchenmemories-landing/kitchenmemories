@@ -56,25 +56,32 @@ const hasCode = new URLSearchParams(window.location.search).get('code');
 if (hasCode) {
   app.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;"><div class="spinner"></div></div>`;
 
-  let handled = false;
+  // Collect events instead of one-shot handler.
+  // Supabase fires SIGNED_IN before PASSWORD_RECOVERY — a one-shot handler
+  // on SIGNED_IN would miss the recovery event entirely.
+  let isRecovery = false;
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-    if (event === 'INITIAL_SESSION') return; // ignore any stored session
-    if (handled) return;
-    handled = true;
-    subscription.unsubscribe();
-    window.history.replaceState({}, '', '/login');
+    console.log('Auth event:', event);
     if (event === 'PASSWORD_RECOVERY') {
-      renderNewPassword(app, navigate);
-    } else {
-      render('/cookbook');
+      isRecovery = true;
     }
   });
 
-  // Manually exchange the code — triggers PASSWORD_RECOVERY event above
+  // Exchange the code — events fire synchronously before the promise resolves,
+  // so isRecovery is already set by the time .then() runs.
   supabase.auth.exchangeCodeForSession(hasCode).then(({ error }) => {
-    if (error && !handled) {
-      handled = true;
+    subscription.unsubscribe();
+
+    if (error) {
       render('/login');
+      return;
+    }
+
+    window.history.replaceState({}, '', isRecovery ? '/login' : '/cookbook');
+    if (isRecovery) {
+      renderNewPassword(app, navigate);
+    } else {
+      render('/cookbook');
     }
   });
 } else {
