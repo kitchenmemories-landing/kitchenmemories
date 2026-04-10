@@ -14,10 +14,14 @@ export async function navigate(path) {
 async function render(path) {
   const session = await getSession();
 
+  // If there's a recovery code in the URL, always show login page to handle it
+  const hasRecoveryCode = new URLSearchParams(window.location.search).get('code') ||
+    window.location.hash.includes('type=recovery');
+
   if (!session && path !== '/login') {
     return render('/login');
   }
-  if (session && path === '/login') {
+  if (session && path === '/login' && !hasRecoveryCode) {
     return render('/cookbook');
   }
 
