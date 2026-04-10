@@ -1,5 +1,6 @@
-import { getSession } from './supabase.js';
+import { getSession, supabase } from './supabase.js';
 import { renderLogin } from '../pages/login.js';
+import { renderNewPassword } from '../pages/login.js';
 import { renderCookbook } from '../pages/cookbook.js';
 import { renderDetail } from '../pages/detail.js';
 import { renderCooking } from '../pages/cooking.js';
@@ -14,14 +15,10 @@ export async function navigate(path) {
 async function render(path) {
   const session = await getSession();
 
-  // If there's a recovery code in the URL, always show login page to handle it
-  const hasRecoveryCode = new URLSearchParams(window.location.search).get('code') ||
-    window.location.hash.includes('type=recovery');
-
   if (!session && path !== '/login') {
     return render('/login');
   }
-  if (session && path === '/login' && !hasRecoveryCode) {
+  if (session && path === '/login') {
     return render('/cookbook');
   }
 
@@ -42,6 +39,15 @@ async function render(path) {
     navigate('/cookbook');
   }
 }
+
+// Listen for PASSWORD_RECOVERY event from Supabase
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    window.history.replaceState({}, '', '/login');
+    app.innerHTML = '';
+    renderNewPassword(app, navigate);
+  }
+});
 
 window.addEventListener('popstate', () => render(window.location.pathname));
 

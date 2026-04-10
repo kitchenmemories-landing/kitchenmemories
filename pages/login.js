@@ -1,27 +1,17 @@
 import { signIn, supabase } from '../js/supabase.js';
 import { t, langToggleBtn, bindLangToggle } from '../js/i18n.js';
 
+// Exported so router can call it directly on PASSWORD_RECOVERY event
+export function renderNewPassword(container, navigate) {
+  showNewPassword(container, navigate);
+}
+
 export function renderLogin(container, navigate) {
   const hash = new URLSearchParams(window.location.hash.replace('#', ''));
-  const query = new URLSearchParams(window.location.search);
 
   // Hash-based error (e.g. expired link)
   if (hash.get('error')) {
     showSignIn(container, navigate, 'The reset link has expired. Please request a new one.');
-    return;
-  }
-
-  // PKCE flow: code in query param
-  const code = query.get('code');
-  if (code) {
-    window.history.replaceState({}, '', '/login');
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        showSignIn(container, navigate, 'The reset link has expired. Please request a new one.');
-      } else {
-        showNewPassword(container, navigate);
-      }
-    });
     return;
   }
 
