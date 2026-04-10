@@ -3,7 +3,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://anfcijhabsneciwxqfgs.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_WUiTy6R_-OuH030PlED84g_1_ZF4_K6';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { detectSessionInUrl: false },
+});
 
 export async function getSession() {
   const { data: { session } } = await supabase.auth.getSession();

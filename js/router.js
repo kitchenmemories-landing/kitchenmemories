@@ -49,22 +49,32 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// If there's a ?code= in the URL, Supabase will auto-exchange it.
-// Wait for the auth event instead of rendering immediately.
+// If there's a ?code= in the URL, handle it manually (detectSessionInUrl is false).
+// Set up the listener FIRST, then exchange — guarantees we catch PASSWORD_RECOVERY.
 const hasCode = new URLSearchParams(window.location.search).get('code');
 
 if (hasCode) {
-  // Show spinner while Supabase processes the code
   app.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;"><div class="spinner"></div></div>`;
 
+  let handled = false;
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    if (event === 'INITIAL_SESSION') return; // ignore any stored session
+    if (handled) return;
+    handled = true;
     subscription.unsubscribe();
     window.history.replaceState({}, '', '/login');
     if (event === 'PASSWORD_RECOVERY') {
-      app.innerHTML = '';
       renderNewPassword(app, navigate);
     } else {
       render('/cookbook');
+    }
+  });
+
+  // Manually exchange the code — triggers PASSWORD_RECOVERY event above
+  supabase.auth.exchangeCodeForSession(hasCode).then(({ error }) => {
+    if (error && !handled) {
+      handled = true;
+      render('/login');
     }
   });
 } else {
