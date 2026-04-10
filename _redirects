@@ -1,3 +1,4 @@
 /login          /app.html  200
+/auth/callback  /app.html  200
 /cookbook       /app.html  200
 /cookbook/*     /app.html  200

@@ -1,6 +1,6 @@
-import { getSession, supabase } from './supabase.js';
-import { renderLogin } from '../pages/login.js';
-import { renderNewPassword } from '../pages/login.js';
+import { getSession } from './supabase.js';
+import { renderLogin, renderNewPassword } from '../pages/login.js';
+import { renderAuthCallback } from '../pages/auth_callback.js';
 import { renderCookbook } from '../pages/cookbook.js';
 import { renderDetail } from '../pages/detail.js';
 import { renderCooking } from '../pages/cooking.js';
@@ -15,7 +15,7 @@ export async function navigate(path) {
 async function render(path) {
   const session = await getSession();
 
-  if (!session && path !== '/login') {
+  if (!session && path !== '/login' && path !== '/auth/callback') {
     return render('/login');
   }
   if (session && path === '/login') {
@@ -29,6 +29,8 @@ async function render(path) {
 
   if (path === '/login') {
     renderLogin(app, navigate);
+  } else if (path === '/auth/callback') {
+    renderAuthCallback(app, navigate);
   } else if (path === '/cookbook') {
     renderCookbook(app, navigate, session);
   } else if (cookingMatch) {
@@ -39,15 +41,6 @@ async function render(path) {
     navigate('/cookbook');
   }
 }
-
-// Listen for PASSWORD_RECOVERY event from Supabase
-supabase.auth.onAuthStateChange((event) => {
-  if (event === 'PASSWORD_RECOVERY') {
-    window.history.replaceState({}, '', '/login');
-    app.innerHTML = '';
-    renderNewPassword(app, navigate);
-  }
-});
 
 window.addEventListener('popstate', () => render(window.location.pathname));
 

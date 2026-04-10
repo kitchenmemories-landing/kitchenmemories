@@ -195,7 +195,7 @@ function showForgotPassword(container, navigate) {
 
     const email = document.getElementById('email').value.trim();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://kitchenmemories.app/login',
+      redirectTo: 'https://kitchenmemories.app/auth/callback',
     });
 
     if (error) {
