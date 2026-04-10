@@ -1,6 +1,5 @@
-import { getSession } from './supabase.js';
+import { getSession, supabase } from './supabase.js';
 import { renderLogin, renderNewPassword } from '../pages/login.js';
-import { renderAuthCallback } from '../pages/auth_callback.js';
 import { renderCookbook } from '../pages/cookbook.js';
 import { renderDetail } from '../pages/detail.js';
 import { renderCooking } from '../pages/cooking.js';
@@ -15,7 +14,7 @@ export async function navigate(path) {
 async function render(path) {
   const session = await getSession();
 
-  if (!session && path !== '/login' && path !== '/auth/callback') {
+  if (!session && path !== '/login') {
     return render('/login');
   }
   if (session && path === '/login') {
@@ -29,8 +28,6 @@ async function render(path) {
 
   if (path === '/login') {
     renderLogin(app, navigate);
-  } else if (path === '/auth/callback') {
-    renderAuthCallback(app, navigate);
   } else if (path === '/cookbook') {
     renderCookbook(app, navigate, session);
   } else if (cookingMatch) {
@@ -52,10 +49,24 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Handle Cloudflare Pages redirect via ?r= param
-const redirectPath = new URLSearchParams(window.location.search).get('r');
-if (redirectPath) {
-  window.history.replaceState({}, '', redirectPath);
-}
+// If there's a ?code= in the URL, Supabase will auto-exchange it.
+// Wait for the auth event instead of rendering immediately.
+const hasCode = new URLSearchParams(window.location.search).get('code');
 
-render(window.location.pathname || '/login');
+if (hasCode) {
+  // Show spinner while Supabase processes the code
+  app.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;"><div class="spinner"></div></div>`;
+
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    subscription.unsubscribe();
+    window.history.replaceState({}, '', '/login');
+    if (event === 'PASSWORD_RECOVERY') {
+      app.innerHTML = '';
+      renderNewPassword(app, navigate);
+    } else {
+      render('/cookbook');
+    }
+  });
+} else {
+  render(window.location.pathname || '/login');
+}
