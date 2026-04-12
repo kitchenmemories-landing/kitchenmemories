@@ -21,9 +21,13 @@ export async function signOut() {
 }
 
 export async function fetchRecipes() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
   const { data, error } = await supabase
     .from('recipes')
     .select('id, name, description, image_url, recipe_category, tags, is_favourite, servings, prep_time, cook_time, created_at')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;

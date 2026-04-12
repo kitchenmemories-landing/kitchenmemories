@@ -140,7 +140,6 @@ body {
   padding: 140px 24px 80px;
   text-align: center;
   position: relative;
-  overflow: hidden;
 }
 .hero::before {
   content: '';
@@ -216,23 +215,105 @@ body {
 }
 .btn-store-main { display: block; line-height: 1.2; }
 
-/* Phone mockup */
-.hero-phone {
-  max-width: 300px;
+/* Device mockups — layered composition */
+.hero-devices {
+  position: relative;
+  max-width: 620px;
   margin: 0 auto;
   animation: fadeInUp 0.8s ease-out 0.4s both;
 }
-.phone-frame {
+
+/* Laptop — back layer, sets container height */
+.hero-laptop {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+.laptop-frame {
   background: var(--color-charcoal);
-  border-radius: 40px;
-  padding: 12px;
+  border-radius: 12px 12px 0 0;
+  padding: 10px 10px 0;
   box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(0,0,0,0.05);
 }
+.laptop-screen {
+  border-radius: 6px;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+.laptop-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.laptop-base {
+  height: 18px;
+  background: var(--color-charcoal);
+  border-radius: 0 0 8px 8px;
+  margin: 0 -5%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: relative;
+}
+.laptop-base::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20%;
+  height: 40%;
+  background: rgba(255,255,255,0.08);
+  border-radius: 0 0 6px 6px;
+}
+
+/* Tablet — right side, half over laptop */
+.hero-tablet {
+  position: absolute;
+  width: 38%;
+  bottom: 0;
+  right: -6%;
+  z-index: 2;
+}
+.tablet-frame {
+  background: var(--color-charcoal);
+  border-radius: 18px;
+  padding: 10px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05);
+}
+.tablet-screen {
+  border-radius: 10px;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+.tablet-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Phone — left side, 2/3 over laptop, 1/3 past edge */
+.hero-phone {
+  position: absolute;
+  width: 22%;
+  bottom: 0;
+  left: -6%;
+  z-index: 3;
+}
+.phone-frame {
+  background: var(--color-charcoal);
+  border-radius: 28px;
+  padding: 8px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05);
+}
 .phone-screen {
-  border-radius: 30px;
+  border-radius: 22px;
   aspect-ratio: 9/19.5;
   overflow: hidden;
-  position: relative;
   background: #FFFFFF;
 }
 .phone-screen img {
@@ -492,7 +573,14 @@ body {
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .hero { padding: 120px 20px 60px; }
-  .hero-phone { max-width: 240px; }
+  .hero-devices { max-width: 360px; }
+  .phone-frame { border-radius: 18px; padding: 5px; }
+  .phone-screen { border-radius: 14px; }
+  .tablet-frame { border-radius: 12px; padding: 6px; }
+  .tablet-screen { border-radius: 7px; }
+  .laptop-frame { border-radius: 8px 8px 0 0; padding: 6px 6px 0; }
+  .laptop-screen { border-radius: 4px; }
+  .laptop-base { height: 10px; }
   .section { padding: 60px 20px; }
   .features-grid { grid-template-columns: 1fr; }
   .pricing-cards { grid-template-columns: 1fr; max-width: 100%; }
@@ -564,10 +652,26 @@ body {
     </a>
   </div>
 
-  <div class="hero-phone">
-    <div class="phone-frame">
-      <div class="phone-screen">
-        <img src="assets/home_wo_bezel.png" alt="Kitchen Memories Home Screen">
+  <div class="hero-devices">
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <img src="assets/home_wo_bezel.png" alt="Kitchen Memories – iPhone">
+        </div>
+      </div>
+    </div>
+    <div class="hero-tablet">
+      <div class="tablet-frame">
+        <div class="tablet-screen">
+          <img src="assets/tablet_mealplanner.png" alt="Kitchen Memories – iPad">
+        </div>
+      </div>
+    </div>
+    <div class="hero-laptop">
+      <div class="laptop-frame">
+        <div class="laptop-screen">
+          <img src="assets/laptop_cookbook.png" alt="Kitchen Memories – Web">
+        </div>
       </div>
     </div>
   </div>
