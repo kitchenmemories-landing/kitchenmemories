@@ -37,10 +37,10 @@ function showNewPassword(container, navigate) {
     <div class="login-wrap">
       <div class="login-card">
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
-        <div class="login-logo">
+        <a href="/" class="login-logo" style="text-decoration:none;color:inherit;">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="login-logo-text">Kitchen Memories</span>
-        </div>
+        </a>
         <h2>${t('resetPassword')}</h2>
         <p>Enter your new password</p>
         <form id="newpw-form">
@@ -98,10 +98,10 @@ function showSignIn(container, navigate, errorMessage = null) {
     <div class="login-wrap">
       <div class="login-card">
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
-        <div class="login-logo">
+        <a href="/" class="login-logo" style="text-decoration:none;color:inherit;">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="login-logo-text">Kitchen Memories</span>
-        </div>
+        </a>
         <h2>${t('welcomeBack')}</h2>
         <p>${t('signInDesc')}</p>
         <form id="login-form">
@@ -160,10 +160,10 @@ function showForgotPassword(container, navigate) {
     <div class="login-wrap">
       <div class="login-card">
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">${langToggleBtn()}</div>
-        <div class="login-logo">
+        <a href="/" class="login-logo" style="text-decoration:none;color:inherit;">
           <img src="/assets/icon.png" alt="Kitchen Memories">
           <span class="login-logo-text">Kitchen Memories</span>
-        </div>
+        </a>
         <h2>${t('resetPassword')}</h2>
         <p>${t('resetDesc')}</p>
         <form id="reset-form">

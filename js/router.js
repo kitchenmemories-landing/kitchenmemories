@@ -61,7 +61,6 @@ if (hasCode) {
   // on SIGNED_IN would miss the recovery event entirely.
   let isRecovery = false;
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-    console.log('Auth event:', event);
     if (event === 'PASSWORD_RECOVERY') {
       isRecovery = true;
     }
