@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Impressum – Kitchen Memories">
+<meta name="robots" content="index, follow">
+<title>Impressum – Kitchen Memories</title>
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-cream: #FFF8F0;
+  --color-terracotta: #C1553B;
+  --color-charcoal: #2C2C2C;
+  --color-text: #3D3D3D;
+  --color-text-light: #6B6B6B;
+  --color-border: #E8E0D8;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --radius: 16px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-cream);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.nav {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 248, 240, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 10;
+}
+.nav-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--color-charcoal);
+}
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.nav-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+.nav-back {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--color-terracotta); }
+.nav-lang {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  margin-left: 14px;
+  transition: border-color 0.2s;
+}
+.nav-lang:hover { border-color: var(--color-terracotta); }
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 2.8rem);
+  color: var(--color-charcoal);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.lead {
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  margin-bottom: 40px;
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--color-charcoal);
+  margin-top: 36px;
+  margin-bottom: 12px;
+}
+p { margin-bottom: 14px; }
+address {
+  font-style: normal;
+  padding: 18px 22px;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+}
+a { color: var(--color-terracotta); }
+a:hover { text-decoration: underline; }
+.muted { color: var(--color-text-light); font-size: 0.85rem; margin-top: 40px; }
+
+[data-lang="en"] .lang-de { display: none; }
+[data-lang="de"] .lang-en { display: none; }
+</style>
+</head>
+<body data-lang="de">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><img src="assets/icon.png" alt="Kitchen Memories"></div>
+      <span class="nav-logo-text">Kitchen Memories</span>
+    </a>
+    <div>
+      <a href="index.html" class="nav-back">
+        <span class="lang-de">← Zurück</span>
+        <span class="lang-en">← Back</span>
+      </a>
+      <button class="nav-lang" onclick="toggleLang()" id="langBtn">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="lang-de">
+    <h1>Impressum</h1>
+    <p class="lead">Angaben gemäss schweizerischem Recht (Art. 3 UWG).</p>
+
+    <h2>Betreiber</h2>
+    <address>
+      Sandro Fürer<br>
+      Fuerer Apps<br>
+      Nordstrasse 39<br>
+      7000 Chur<br>
+      Schweiz
+    </address>
+
+    <h2>Kontakt</h2>
+    <p>
+      E-Mail: <a href="mailto:info.fursoft@gmail.com">info.fursoft@gmail.com</a><br>
+      Website: <a href="https://kitchenmemories.app">https://kitchenmemories.app</a>
+    </p>
+
+    <h2>Haftungsausschluss</h2>
+    <p>Der Autor übernimmt keinerlei Gewähr hinsichtlich der inhaltlichen Richtigkeit, Genauigkeit, Aktualität, Zuverlässigkeit und Vollständigkeit der Informationen. Haftungsansprüche gegen den Autor wegen Schäden materieller oder immaterieller Art, welche aus dem Zugriff oder der Nutzung bzw. Nichtnutzung der veröffentlichten Informationen, durch Missbrauch der Verbindung oder durch technische Störungen entstanden sind, werden ausgeschlossen.</p>
+    <p>Alle Angebote sind unverbindlich. Der Autor behält es sich ausdrücklich vor, Teile der Seiten oder das gesamte Angebot ohne gesonderte Ankündigung zu verändern, zu ergänzen, zu löschen oder die Veröffentlichung zeitweise oder endgültig einzustellen.</p>
+
+    <h2>Haftung für Links</h2>
+    <p>Verweise und Links auf Webseiten Dritter liegen ausserhalb unseres Verantwortungsbereichs. Es wird jegliche Verantwortung für solche Webseiten abgelehnt. Der Zugriff und die Nutzung solcher Webseiten erfolgen auf eigene Gefahr des Nutzers.</p>
+
+    <h2>Urheberrechte</h2>
+    <p>Die Urheber- und alle anderen Rechte an Inhalten, Bildern, Fotos oder anderen Dateien auf dieser Website gehören ausschliesslich Fuerer Apps oder den speziell genannten Rechteinhabern. Für die Reproduktion jeglicher Elemente ist die schriftliche Zustimmung der Urheberrechtsträger im Voraus einzuholen.</p>
+
+    <h2>Datenschutz</h2>
+    <p>Unsere Datenschutzerklärung findest du <a href="https://sites.google.com/view/my-cook-book-privacy-policy" target="_blank" rel="noopener">hier</a>.</p>
+
+    <p class="muted">Stand: April 2026</p>
+  </div>
+
+  <div class="lang-en">
+    <h1>Legal Notice</h1>
+    <p class="lead">Information pursuant to Swiss law (Art. 3 UCA).</p>
+
+    <h2>Operator</h2>
+    <address>
+      Sandro Fürer<br>
+      Fuerer Apps<br>
+      Nordstrasse 39<br>
+      7000 Chur<br>
+      Switzerland
+    </address>
+
+    <h2>Contact</h2>
+    <p>
+      Email: <a href="mailto:info.fursoft@gmail.com">info.fursoft@gmail.com</a><br>
+      Website: <a href="https://kitchenmemories.app">https://kitchenmemories.app</a>
+    </p>
+
+    <h2>Disclaimer</h2>
+    <p>The author assumes no responsibility whatsoever for the correctness, accuracy, timeliness, reliability or completeness of the information provided. Liability claims against the author for damages of a material or immaterial nature arising from access to, use or non-use of the published information, misuse of the connection or technical malfunctions are excluded.</p>
+    <p>All offers are non-binding. The author expressly reserves the right to change, supplement or delete parts of the pages or the entire offer without separate announcement, or to temporarily or permanently discontinue publication.</p>
+
+    <h2>Liability for Links</h2>
+    <p>References and links to third-party websites are outside our area of responsibility. Any responsibility for such websites is rejected. Access to and use of such websites is at the user's own risk.</p>
+
+    <h2>Copyright</h2>
+    <p>The copyright and all other rights to content, images, photos or other files on this website belong exclusively to Fuerer Apps or the specifically named rights holders. For the reproduction of any elements, the written consent of the copyright holders must be obtained in advance.</p>
+
+    <h2>Privacy</h2>
+    <p>You can find our privacy policy <a href="https://sites.google.com/view/my-cook-book-privacy-policy" target="_blank" rel="noopener">here</a>.</p>
+
+    <p class="muted">Last updated: April 2026</p>
+  </div>
+</main>
+
+<script>
+function toggleLang() {
+  const body = document.body;
+  const btn = document.getElementById('langBtn');
+  if (body.dataset.lang === 'de') {
+    body.dataset.lang = 'en';
+    btn.textContent = 'DE';
+  } else {
+    body.dataset.lang = 'de';
+    btn.textContent = 'EN';
+  }
+}
+</script>
+
+</body>
+</html>
